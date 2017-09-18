@@ -6,7 +6,76 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+    // handles an xhr response
+    const handleResponse = (xhr) => {
+        
+        // what type did the server respond with
+        const type = xhr.getResponseHeader('content-type');
+        
+        // grab the content section
+        const content = document.querySelector("#content");
+        
+        // check the xhr status code and handle accordingly
+        const h1 = document.createElement('h1');
+        const p = document.createElement('p');
+        
+        if(type === 'application/json') { // json
+            const obj = JSON.parse(xhr.response);
+            if(xhr.status === 200){
+                h1.textContent = `Success`;
+            } else {
+                h1.textContent = `${obj.id}`;
+            }
+            p.textContent = `${obj.message}`
+        } else if (type === 'text/xml') { // xml       
+            if(xhr.status === 200){
+                h1.textContent = `Success`;
+            } else {
+                const id = xhr.responseXML.querySelector('id').textContent;
+                h1.textContent = `Id: ${id}`;
+            }
+            const message = xhr.responseXML.querySelector('message').textContent;
+            
+            p.textContent = `Message: ${message}`;
+        }
+        
+        // append the h1 and p to the content
+        content.innerHTML = "";
+        content.appendChild(h1);
+        content.appendChild(p);
+    };
 
+    // sends to ajax
+    const sendAjax = (url, type) => {
+        // create a new xhr (ajax - Asynchronous) request
+        const xhr = new XMLHttpRequest();
+        // set the xhr to a GET request to a certain URL
+        xhr.open('GET', url);
+        
+        // set the accept headers to the desired response mime type. Not necessary but still
+        xhr.setRequestHeader("Accept", type);
+        
+        // Whan the xhr loads, call handleResponse and pass the xhr object
+        xhr.onload = () => handleResponse(xhr);
+        
+        // send our ajax request to the server
+        xhr.send();
+    };
+
+    // initialization function
+    const init = () => {
+        const pageBox = document.querySelector('#page');
+        const typeBox = document.querySelector('#type');
+        const sendButton = document.querySelector("#send");
+        
+        const sendHandler = () => sendAjax(pageBox.value, typeBox.value);
+        
+        
+        // attach the correct functions to the correct events
+        sendButton.addEventListener('click', sendHandler);
+        
+    };
+    window.onload = init;
   </script>
 </head>
 <body>
