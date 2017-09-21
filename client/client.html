@@ -19,6 +19,7 @@
         const h1 = document.createElement('h1');
         const p = document.createElement('p');
         
+      	console.dir(xhr.response);
         if(type === 'application/json') { // json
             const obj = JSON.parse(xhr.response);
             if(xhr.status === 200){
@@ -52,6 +53,7 @@
         // set the xhr to a GET request to a certain URL
         xhr.open('GET', url);
         
+      	console.dir(type);
         // set the accept headers to the desired response mime type. Not necessary but still
         xhr.setRequestHeader("Accept", type);
         

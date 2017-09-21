@@ -4,7 +4,7 @@ const respond = (request, response, status, object, type) => {
     response.writeHead(status, { 'Content-Type': 'text/xml' });
     let responseXML = '<response>';
     if (object.id) {
-      responseXML = `${responseXML} <message>${object.message}</message>`;
+      responseXML = `${responseXML}<id>${object.id}</id>`;
     }
     responseXML = `${responseXML} <message>${object.message}</message></response>`;
     response.write(responseXML);
@@ -17,7 +17,7 @@ const respond = (request, response, status, object, type) => {
 };
 
 // function to show a success status code
-const success = (request, response, type) => {
+const success = (request, response, params, type) => {
   // message to send
   const responseJSON = {
     message: 'This is a successful response',
@@ -100,7 +100,7 @@ const notImplemented = (request, response, params, type) => {
 };
 
 // function to show not found error
-const notFound = (request, response) => {
+const notFound = (request, response, params, type) => {
   // error message with a description and consistent error id
   const responseJSON = {
     message: 'The page you are looking for was not found.',
@@ -108,7 +108,7 @@ const notFound = (request, response) => {
   };
 
   // return our json with a 404 not found error code
-  respond(request, response, 404, responseJSON);
+  respond(request, response, 404, responseJSON, type);
 };
 
 

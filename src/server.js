@@ -28,7 +28,7 @@ const urlStruct = {
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   const params = query.parse(parsedUrl.query);
-  const type = request.headers.accept.split(',');
+  const type = request.headers.accept.split(',')[0];
 
 
   // check if the path name (the /name part of the url) matches 
